@@ -1,8 +1,21 @@
-
+import lcddriver
+import time
 import RPi.GPIO as GPIO
 from hx711 import HX711
-
+display = lcddriver.lcd()
+def long_string(display, text = '', num_line = 1, num_cols = 20):
+    if(len(text) > num_cols):
+        display.lcd_display_string(text[:num_cols],num_line)
+        time.sleep(1)
+        for i in range(len(text) - num_cols + 1):
+            text_to_print = text[i:i+num_cols]
+            display.lcd_display_string(text_to_print,num_line)
+            time.sleep(0.2)
+    else:
+        display.lcd_display_string(text,num_line)
+        display = lcddriver.lcd()
 try:
+    display.lcd_display_string("ZoologicalFooding")
     GPIO.setmode(GPIO.BCM)
 
     hx = HX711(dout_pin=5, pd_sck_pin=6)
