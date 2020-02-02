@@ -16,8 +16,8 @@ def long_string(display, text = '', num_line = 1, num_cols = 20):
         display.lcd_display_string(text,num_line)
         display = lcddriver.lcd()
 try:
-    long_string(display, "Welcome to ZoologicalFooding project", 1)
-    display.lcd_display_string(":)", 2)
+ #   long_string(display, "Welcome to ZoologicalFooding project", 1)
+  #  display.lcd_display_string(":)", 2)
     GPIO.setmode(GPIO.BCM)
 
     hx = HX711(dout_pin=5, pd_sck_pin=6)
@@ -53,7 +53,8 @@ try:
     print("Surekli olarak olculen deger aktarilacak")
     input('Baslamak icin enter\'a basin')
     while True:
-        print("%.2f" % hx.get_weight_mean(20), 'gr')
+       # print("%.2f" % hx.get_weight_mean(20), 'gr')
+        display.lcd_display_string("%5.2f gr"%hx.get_weight_mean(20), 2)
 
 except (KeyboardInterrupt, SystemExit):
     print('program sonlandi')
