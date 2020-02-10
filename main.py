@@ -16,8 +16,8 @@ def long_string(display, text = '', num_line = 1, num_cols = 20):
         display.lcd_display_string(text,num_line)
         display = lcddriver.lcd()
 try:
- #   long_string(display, "Welcome to ZoologicalFooding project", 1)
-  #  display.lcd_display_string(":)", 2)
+    long_string(display, "ZoologicalFooding projesine hosgeldiniz", 1)
+    display.lcd_display_string(":)", 2)
     GPIO.setmode(GPIO.BCM)
 
     hx = HX711(dout_pin=5, pd_sck_pin=6)
@@ -33,6 +33,7 @@ try:
         print('hatali veri', reading)
 
 
+    
     input('Agirligi bilinen bir deger koyup enter\' a basin')
     reading = hx.get_data_mean()
     if reading:
@@ -46,6 +47,10 @@ try:
         ratio = reading / value
         hx.set_scale_ratio(ratio)
         print('Olceklendirme tamamlandi')
+        long_string(display, "Olceklendirme tamamlandi", 1)
+        time.sleep(1)
+        display.lcd_display_string("                            ", 1)
+        display.lcd_display_string("                            ", 2)
     else:
         raise ValueError('Gelen deger hesaplanamiyor')
 
@@ -53,8 +58,10 @@ try:
     print("Surekli olarak olculen deger aktarilacak")
     input('Baslamak icin enter\'a basin')
     while True:
-       # print("%.2f" % hx.get_weight_mean(20), 'gr')
-        display.lcd_display_string("%5.2f gr"%hx.get_weight_mean(20), 2)
+        wght = hx.get_weight_mean(20)
+        print("%.2f" % wght, 'gr')
+        display.lcd_display_string("Kutle:", 1)
+        display.lcd_display_string("%5.2f gr"%wght, 2)
 
 except (KeyboardInterrupt, SystemExit):
     print('program sonlandi')
