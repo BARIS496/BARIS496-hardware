@@ -17,8 +17,7 @@ headers={'Content-type':'application/json', 'Accept':'application/json'}
 
 URL3 = "https://restservices496.herokuapp.com/editContainer/761"
 
-data = {'name':'real container','type':'dosdsdsg','longitude':long,'latitude':lat,'address':'adrsssss','weight':1.0}
-r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
+data = {'name':'real container','type':'dosdsdsg','longitude':long,'latitude':lat,'address':'adrsssss','weight':0.0, 'ip':IP,'city':city,'region':region,'country':country}
 r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
 pastebin_url2 = r3.text 
 print("The pastebin URL is:%s"%pastebin_url2) 
