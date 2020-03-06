@@ -25,7 +25,7 @@ while True:
     weight = float("{0:.2f}".format(random.uniform(1, 10)))
     #print to lcd
     if int(time.time() - last_time_measured) > 10:
-        data = {'name':'real container','type':'dosdsdsg','lng':12221,'lat':114244,'address':'adrsssss','weight':weight}
+        data = {'name':'real container','type':'dosdsdsg','longitude':'12221','latitude':'114244','address':'adrsssss','weight':weight}
         r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
         pastebin_url2 = r3.text 
         print("The pastebin URL is:%s"%pastebin_url2) 
