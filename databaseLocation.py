@@ -9,7 +9,7 @@ city = data['city']
 country=data['country']
 region=data['region']
 loc=data['loc']
-
+print(city)
 long = loc[:loc.index(',')]
 lat = loc[loc.index(',')+1:]
 
@@ -20,7 +20,7 @@ URL3 = "https://restservices496.herokuapp.com/editContainer/761"
 ##default
 data2 = {'name':'a','type':'dosdsdsg','longitude':1,'latitude':1,'address':'adrsssss','weight':0.0, 'ip':'a','city':'a','region':'a','country':'a'}
 
-data = {'name':'real #container','type':'dosdsdsg','longitude':long,'latitude':lat,'address':'adrsssss','weight':0.0, 'ip':IP,'city':city,'region':region,'country':country}
-r3 = requests.put(url = URL3, data=json.dumps(data2),headers=headers)
+data = {'name':'real container','type':'dosdsdsg','longitude':long,'latitude':lat,'address':'adrsssss','weight':0.0, 'ip':IP,'city':city,'region':region,'country':country}
+r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
 pastebin_url2 = r3.text 
 print("The pastebin URL is:%s"%pastebin_url2) 

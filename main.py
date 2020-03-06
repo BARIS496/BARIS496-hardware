@@ -5,11 +5,14 @@ import requests
 import json
 import time
 from hx711 import HX711
+from urllib.request import urlopen
+
 URL = "http://restservices496.herokuapp.com/containers"
 id = 1
 PARAMS = {'container_id':id}
 r = requests.get(url = URL, params = PARAMS)
 data = r.json()
+print("Mevcut containerlar:")
 print(data)
 
 print("   ")
@@ -74,7 +77,7 @@ try:
 
     print("Surekli olarak olculen deger aktarilacak")
     input('Baslamak icin enter\'a basin')
-    URL3 = "https://restservices496.herokuapp.com/editContainer/311"
+    URL3 = "https://restservices496.herokuapp.com/editContainer/761"
     last_time_measured = time.time()
     
     while True:
@@ -84,12 +87,29 @@ try:
         display.lcd_display_string("%5.2f gr"%wght, 2)
         
         weight = float("{0:.2f}".format(wght))
-        if int(time.time() - last_time_measured) > 10:
-            data = {'name':'real container','type':'dosdsdsg','lng':12221,'lat':114244,'address':'adrsssss','weight':weight}
+        if int(time.time() - last_time_measured) > 15:
+            html = urlopen("http://ipinfo.io/json").read()
+            data = json.loads(html.decode('utf-8'))
+            IP=data['ip']
+            org=data['org']
+            city = data['city']
+            country=data['country']
+            region=data['region']
+            loc=data['loc']
+            long = loc[:loc.index(',')]
+            lat = loc[loc.index(',')+1:]
+
+            headers={'Content-type':'application/json', 'Accept':'application/json'}
+
+            URL3 = "https://restservices496.herokuapp.com/editContainer/761"
+
+            data = {'name':'real container','type':'dosdsdsg','longitude':long,'latitude':lat,'address':'adrsssss','weight':weight, 'ip':IP,'city':city,'region':region,'country':country}
             r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
-            pastebin_url2 = r3.text 
-            print("The pastebin URL is:%s"%pastebin_url2) 
-            print(weight)
+            
+
+            w = str(weight)
+            print("Weight : " + w + " gr , Location: " + long + ", " + lat + ", " + city + ", " + country + ", IP: " + IP + " send to database")
+
             last_time_measured = time.time()
 
 except (KeyboardInterrupt, SystemExit):
