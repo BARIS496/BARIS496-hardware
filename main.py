@@ -84,6 +84,7 @@ try:
         wght = hx.get_weight_mean(20)
         print("%.2f" % wght, 'gr')
         display.lcd_display_string("Kutle:", 1)
+        display.lcd_display_string("                             ", 2)
         display.lcd_display_string("%5.2f gr"%wght, 2)
         
         weight = float("{0:.2f}".format(wght))
