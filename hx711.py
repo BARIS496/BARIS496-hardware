@@ -16,7 +16,7 @@ class HX711:
     def __init__(self,
                  dout_pin,
                  pd_sck_pin,
-                 gain_channel_A=128,
+                 gain_channel_A=64,
                  select_channel='A'):
         """
         Init a new instance of HX711
