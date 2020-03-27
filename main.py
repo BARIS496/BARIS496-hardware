@@ -12,7 +12,7 @@ id = 1
 PARAMS = {'container_id':id}
 r = requests.get(url = URL, params = PARAMS)
 data = r.json()
-print("Mevcut containerlar:")
+print("Existing containers:")
 print(data)
 
 print("   ")
@@ -36,7 +36,7 @@ def long_string(display, text = '', num_line = 1, num_cols = 20):
         display.lcd_display_string(text,num_line)
         display = lcddriver.lcd()
 try:
-    long_string(display, "ZoologicalFooding projesine hosgeldiniz", 1)
+    long_string(display, "Welcome to ZoologicalFooding Project", 1)
     display.lcd_display_string(":)", 2)
     GPIO.setmode(GPIO.BCM)
 
@@ -45,45 +45,45 @@ try:
     error = hx.zero()
 
     if error:
-        raise ValueError('Tara alinamadi')
+        raise ValueError('Cannot tare the scale')
 
     reading = hx.get_raw_data_mean()
     
     if not reading:
-        print('hatali veri', reading)
+        print('incorrect data', reading)
 
 
     
-    input('Agirligi bilinen bir deger koyup enter\' a basin')
+    input('Place a known weighted object')
     reading = hx.get_data_mean()
     if reading:
-        known_weight_grams = input('koydugunuz cismin agirligi:')
+        known_weight_grams = input('Weight of the object: ')
         try:
             value = float(known_weight_grams)
 
         except ValueError:
-            print('Yanlis tip deger girildi')
+            print('Incorrect type of value')
 
         ratio = reading / value
         hx.set_scale_ratio(ratio)
-        print('Olceklendirme tamamlandi')
-        long_string(display, "Olceklendirme tamamlandi", 1)
+        print('Scaling done')
+        long_string(display, "Scaling done", 1)
         time.sleep(1)
         display.lcd_display_string("                            ", 1)
         display.lcd_display_string("                            ", 2)
     else:
-        raise ValueError('Gelen deger hesaplanamiyor')
+        raise ValueError('Cannot calculate the incoming value')
 
 
-    print("Surekli olarak olculen deger aktarilacak")
-    input('Baslamak icin enter\'a basin')
+    print("Starting to measure...")
+    input('Ready? (Enter)')
     URL3 = "https://restservices496.herokuapp.com/editContainer/761"
     last_time_measured = time.time()
     
     while True:
         wght = hx.get_weight_mean(20)
         print("%.2f" % wght, 'gr')
-        display.lcd_display_string("Kutle:", 1)
+        display.lcd_display_string("Weight:", 1)
         display.lcd_display_string("                             ", 2)
         display.lcd_display_string("%5.2f gr"%wght, 2)
         
@@ -109,12 +109,12 @@ try:
             
 
             w = str(weight)
-            print("Weight : " + w + " gr , Location: " + long + ", " + lat + ", " + city + ", " + country + ", IP: " + IP + " send to database")
+            print("Weight : " + w + " gr , Location: " + long + ", " + lat + ", " + city + ", " + country + ", IP: " + IP + " sent to database")
 
             last_time_measured = time.time()
 
 except (KeyboardInterrupt, SystemExit):
-    print('program sonlandi')
+    print('The program ended')
 
 finally:
     GPIO.cleanup()
