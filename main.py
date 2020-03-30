@@ -54,7 +54,7 @@ try:
 
 
     
-    input('Place a known weighted object')
+    input('Place a known weighted object and press <enter>')
     reading = hx.get_data_mean()
     if reading:
         known_weight_grams = input('Weight of the object: ')
@@ -76,7 +76,7 @@ try:
 
 
     print("Starting to measure...")
-    input('Ready? (Enter)')
+    input('Ready? (<Enter>)')
     URL3 = "https://restservices496.herokuapp.com/editContainer/761"
     last_time_measured = time.time()
     
