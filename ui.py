@@ -9,13 +9,20 @@ import json
 import time
 from hx711 import HX711
 from urllib.request import urlopen
-adminWindow = None
+
 headers={'Content-type':'application/json', 'Accept':'application/json'}
+
 
 display = lcddriver.lcd()
 
-def adminWindowWeightPut():
-    print('asd')
+def complete():
+    print('asdasd')
+    
+def eWeightGet(e1, known_weight_grams):
+    known_weight_grams[0] = e1.get()
+    
+def adminWindowWeightPut(wait1):
+    wait1[0] = 1
     
 #this func will be used if needed
 def long_string(display, text = '', num_line = 1, num_cols = 20):
@@ -30,7 +37,7 @@ def long_string(display, text = '', num_line = 1, num_cols = 20):
         display.lcd_display_string(text,num_line)
         display = lcddriver.lcd()
 
-def startHardware():
+def startHardware(adminWindow):
     try:
         display.lcd_display_string("Hi!", 1)
         display.lcd_display_string(":)", 2)
@@ -49,33 +56,58 @@ def startHardware():
             print('incorrect data', reading)
 
 
+   
+       
+   
+    
   
 
 
-
-        input('Place a known weighted object and press <enter>')
+        a2 = tkinter.Label(adminWindow, text="Place a known weighted object and press")
+        a2.place(relx = 0.5, rely = 0.25, anchor=CENTER),
+        wait1 = [0]
+        
+        var1 = tkinter.IntVar()
+        a3 = tkinter.Button(adminWindow, text='here', command= lambda: var1.set(5))
+        a3.place(relx = 0.5, rely = 0.3, anchor=CENTER)
+        a3.wait_variable(var1)
+        print("doesnt reach here")
+        
         reading = hx.get_data_mean()
         if reading:
-            known_weight_grams = input('Weight of the object: ')
+            
+            
+            a4 = tkinter.Label(adminWindow, text="Weight of the object:")
+            a4.place(relx = 0.5, rely = 0.45, anchor=CENTER)
+            e1 = tkinter.Entry(adminWindow)
+            e1.place(relx = 0.5, rely = 0.5, anchor=CENTER)
+            known_weight_grams = [3454572345]
+            a5 = tkinter.Button(adminWindow, text='enter', command = lambda: eWeightGet(e1, known_weight_grams))
+            a5.place(relx = 0.5, rely = 0.55, anchor=CENTER)
+        
+            a5.wait_variable(known_weight_grams[0])
+            print(known_weight_grams[0])
+            
             try:
-                value = float(known_weight_grams)
+                value = float(known_weight_grams[0])
 
             except ValueError:
                 print('Incorrect type of value')
 
             ratio = reading / value
             hx.set_scale_ratio(ratio)
-            print('Scaling done')
+            #print('Scaling done')
             long_string(display, "Scaling done", 1)
             time.sleep(1)
             display.lcd_display_string("                            ", 1)
             display.lcd_display_string("                            ", 2)
-        else:
-            raise ValueError('Cannot calculate the incoming value')
+        #else:
+            #raise ValueError('Cannot calculate the incoming value')
 
 
-        print("Starting to measure...")
-        input('Ready? (<Enter>)')
+        a7 = tkinter.Button(adminWindow, text='Complete the setup and start measuring (exits admin mode)', command = complete)
+        a7.place(relx = 0.5, rely = 0.7, anchor=CENTER)
+       
         URL3 = "https://restservices496.herokuapp.com/editContainer/761"
         last_time_measured = time.time()
         
@@ -186,9 +218,7 @@ T.place(relx = 0.5, rely = 0.2, anchor = CENTER)
 
 
 
-def eWeightGet(e1):
-    print(e1.get())
-    
+
 def adminSetup():
     count = 0
     while True:
@@ -216,25 +246,11 @@ def adminSetup():
     adminWindow.geometry('600x600')
     adminWindow.title("setup")
     
-    a1 = tkinter.Button(adminWindow, text='Start the hardware', command=startHardware)
+    a1 = tkinter.Button(adminWindow, text='Start the hardware', command= lambda: startHardware(adminWindow))
     a1.place(relx = 0.5, rely = 0.1, anchor = CENTER)
     
 
 
-    a2 = tkinter.Label(adminWindow, text="Place a known weighted object and press")
-    a2.place(relx = 0.5, rely = 0.25, anchor=CENTER)
-    a3 = tkinter.Button(adminWindow, text='here', command=adminWindowWeightPut)
-    a3.place(relx = 0.5, rely = 0.3, anchor=CENTER)
-       
-    a4 = tkinter.Label(adminWindow, text="Weight of the object:")
-    a4.place(relx = 0.5, rely = 0.45, anchor=CENTER)
-    e1 = tkinter.Entry(adminWindow)
-    e1.place(relx = 0.5, rely = 0.5, anchor=CENTER)
-    a5 = tkinter.Button(adminWindow, text='enter', command = lambda: eWeightGet(e1))
-    a5.place(relx = 0.5, rely = 0.55, anchor=CENTER)
-    
-    a7 = tkinter.Button(adminWindow, text='Complete the setup and start measuring (exits admin mode)', command = lambda: eWeightGet(e1))
-    a7.place(relx = 0.5, rely = 0.7, anchor=CENTER)
 
     
     
