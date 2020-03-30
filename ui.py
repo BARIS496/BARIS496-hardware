@@ -2,6 +2,48 @@ import tkinter
 from tkinter import messagebox
 from tkinter import *
 
+class takeInput(object):
+
+    def __init__(self,requestMessage, windowName, isPassw):
+        self.root = Tk()
+        
+        windowWidth = 400 
+        windowHeight = 50 
+   
+        positionRight = int(self.root.winfo_screenwidth()/2 - windowWidth/2)
+        positionDown = int(self.root.winfo_screenheight()/2 - windowHeight/2)
+ 
+        self.root.geometry("+{}+{}".format(positionRight, positionDown))
+        self.root.geometry('400x50')
+        self.root.title(windowName)
+    
+        self.string = ''
+        self.frame = Frame(self.root)
+        self.frame.pack()        
+        self.acceptInput(requestMessage, isPassw)
+        
+    def acceptInput(self,requestMessage, isPassw):
+        r = self.frame
+
+        k = Label(r,text=requestMessage)
+        k.pack(side='left')
+        self.e = Entry(r,text='Name')
+        if isPassw:
+            self.e.config(show="*");
+        self.e.pack(side='left')
+        self.e.focus_set()
+        b = Button(r,text='okay',command=self.gettext)
+        b.pack(side='right')
+
+    def gettext(self):
+        self.string = self.e.get()
+        self.root.destroy()
+
+    def getString(self):
+        return self.string
+
+    def waitForInput(self):
+        self.root.wait_window()
 
 mainWindow = tkinter.Tk()
 
@@ -21,18 +63,20 @@ T.insert(tkinter.END, "Welcome to ZoologicalFooding!\n           Container Id:76
 T.configure(state='disabled')
 
 def adminSetup():
-    window = tkinter.Toplevel(mainWindow)
-    windowWidth = 600 #window.winfo_reqwidth()
-    windowHeight = 600 #window.winfo_reqheight()
-
- 
-    # Gets both half the screen width/height and window width/height
-    positionRight = int(window.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(window.winfo_screenheight()/2 - windowHeight/2)
- 
-    # Positions the window in the center of the page.
-    window.geometry("+{}+{}".format(positionRight, positionDown))
-    window.geometry('600x600')
+    count = 0
+    while True:
+        msgBox = takeInput('Admin password:', 'Admin confirmation', True)
+        msgBox.waitForInput()
+        answer = msgBox.getString()
+        if answer != "Zoologicalfooding2020":
+            if count == 2:
+                tkinter.messagebox.showinfo("Error", "Too many unsuccessful attempts!")
+                return
+            tkinter.messagebox.showinfo("Error", "Wrong Password!")    
+            count = count + 1
+        else:
+            break
+    tkinter.messagebox.showinfo("Success", "Logged in succesfully")
     
 def beforeFilling():
     tkinter.messagebox.showinfo("b", "bb")
