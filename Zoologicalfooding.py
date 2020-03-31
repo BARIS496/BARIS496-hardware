@@ -10,6 +10,7 @@ import time
 from hx711 import HX711
 from urllib.request import urlopen
 import threading
+import sys
 
 headers={'Content-type':'application/json', 'Accept':'application/json'}
 
@@ -20,6 +21,13 @@ def complete(adminWindow, hx, T1, mainWindow, B0):
     adminWindow.destroy()
     B0["state"] = "disabled"
     T1.config(text = "Status: Working fine!", bg = "green")
+    
+    wl = tkinter.Label(mainWindow, text="Weight:", height=1, width=20, bg = "navajowhite2")
+    wl.configure(font=("Comic Sans MS", 17))
+    wl.configure(bg = "lemon chiffon")
+    wl.pack()
+    wl.place(relx = 0.5, rely = 0.4, anchor = CENTER)
+
     mainWindow.update()
     URL3 = "https://restservices496.herokuapp.com/editContainer/761"
     last_time_measured = time.time()
@@ -27,6 +35,8 @@ def complete(adminWindow, hx, T1, mainWindow, B0):
     while True:
         mainWindow.update()
         wght = hx.get_weight_mean(20)
+        a = float("{0:.2f}".format(wght))
+        wl.config(text= "Weight: "+str(a)+" gr")
         print("%.2f" % wght, 'gr')
         mainWindow.update()
         display.lcd_display_string("Weight:", 1)
@@ -87,6 +97,7 @@ def adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0):
 
     a7 = tkinter.Button(adminWindow, text='Complete the setup and start measuring (exits admin mode)', command = lambda: complete(adminWindow, hx, T1, mainWindow, B0))
     a7.place(relx = 0.5, rely = 0.7, anchor=CENTER)
+    a7.configure(bg = "lemon chiffon")
        
     
                 
@@ -98,9 +109,12 @@ def adminWindowWeightPut(adminWindow, reading, hx, T1, mainWindow, B0):
             
         a4 = tkinter.Label(adminWindow, text="Weight of the object:")
         a4.place(relx = 0.5, rely = 0.45, anchor=CENTER)
+        a4.configure(bg = "lemon chiffon")
         e1 = tkinter.Entry(adminWindow)
+        e1.configure(bg = "lemon chiffon")
         e1.place(relx = 0.5, rely = 0.5, anchor=CENTER)
         a5 = tkinter.Button(adminWindow, text='enter', command = lambda: adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0))
+        a5.configure(bg = "lemon chiffon")
         a5.place(relx = 0.5, rely = 0.55, anchor=CENTER)
         
         
@@ -149,9 +163,11 @@ def startHardware(adminWindow, T1, mainWindow, B0):
 
 
         a2 = tkinter.Label(adminWindow, text="Place a known weighted object and press")
-        a2.place(relx = 0.5, rely = 0.25, anchor=CENTER),
+        a2.place(relx = 0.5, rely = 0.25, anchor=CENTER)
+        a2.configure(bg = "lemon chiffon")
         a3 = tkinter.Button(adminWindow, text='here', command= lambda: adminWindowWeightPut(adminWindow, reading, hx, T1, mainWindow, B0))
         a3.place(relx = 0.5, rely = 0.3, anchor=CENTER)
+        a3.configure(bg = "lemon chiffon")
         
         
         
@@ -169,7 +185,7 @@ def adminSetup(T1, mainWindow, B0):
         answer = msgBox.getString()
         if answer != "Zoologicalfooding2020":
             if count == 2:
-                tkinter.messagebox.showinfo("Error", "Too many unsuccessful attempts!")
+                a = tkinter.messagebox.showinfo("Error", "Too many unsuccessful attempts!")
                 return
             tkinter.messagebox.showinfo("Error", "Wrong Password!")    
             count = count + 1
@@ -187,9 +203,11 @@ def adminSetup(T1, mainWindow, B0):
     adminWindow.geometry("+{}+{}".format(apositionRight, apositionDown))
     adminWindow.geometry('600x600')
     adminWindow.title("setup")
+    adminWindow.configure(bg = "papaya whip")
     
-    a1 = tkinter.Button(adminWindow, text='Start the hardware', command= lambda: startHardware(adminWindow, T1, mainWindow, B0))
+    a1 = tkinter.Button(adminWindow, text='Start the hardware', command= lambda: threading.Thread(target=startHardware(adminWindow, T1, mainWindow, B0)).start())
     a1.place(relx = 0.5, rely = 0.1, anchor = CENTER)
+    a1.configure(bg = "lemon chiffon")
     
 
 
@@ -204,15 +222,84 @@ def adminSetup(T1, mainWindow, B0):
 #   e2.grid(row=3, column=1)
 
     
+
+def aboutTheDestroy(wind, txt):
+    aa = tkinter.Label(wind, text=txt, height=1, width=30, bg = "papaya whip")
+    aa.configure(font=("Comic Sans MS", 12))
+    aa.pack()
+    aa.place(relx = 0.5, rely = 0.3, anchor = CENTER)
+
+    bb = tkinter.Label(wind, text="5", height=1, width=1, bg = "papaya whip")
+    bb.configure(font=("Comic Sans MS", 17))
+    bb.pack()
+    bb.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+    wind.update()
+    time.sleep(1)
+    bb.config(text = "4")
+    wind.update()
+    time.sleep(1)
+    bb.config(text = "3")
+    wind.update()
+    time.sleep(1)
+    bb.config(text = "2")
+    wind.update()
+    time.sleep(1)
+    bb.config(text = "1")
+    wind.update()
+    time.sleep(1)
+    wind.destroy()
     
 def beforeFilling():
-    tkinter.messagebox.showinfo("b", "bb")
+    bFillingWindow = tkinter.Tk()
+    awindowWidth = 300 
+    awindowHeight = 300 
+   
+    apositionRight = int(bFillingWindow.winfo_screenwidth()/2 - awindowWidth/2)
+    apositionDown = int(bFillingWindow.winfo_screenheight()/2 - awindowHeight/2)
+ 
+    bFillingWindow.geometry("+{}+{}".format(apositionRight, apositionDown))
+    bFillingWindow.geometry('300x300')
+    bFillingWindow.title("setup")
+    bFillingWindow.configure(bg = "papaya whip")
+    
+    x = tkinter.Button(bFillingWindow, text='Ready', command= lambda: aboutTheDestroy(bFillingWindow, "Put the food after this window closes"))
+    x.place(relx = 0.5, rely = 0.1, anchor = CENTER)
+    x.configure(bg = "lemon chiffon")
+    
+    
 
 def afterFilling():
-    tkinter.messagebox.showinfo("a", "aa")
+    aFillingWindow = tkinter.Tk()
+    awindowWidth = 300 
+    awindowHeight = 300 
+   
+    apositionRight = int(aFillingWindow.winfo_screenwidth()/2 - awindowWidth/2)
+    apositionDown = int(aFillingWindow.winfo_screenheight()/2 - awindowHeight/2)
+ 
+    aFillingWindow.geometry("+{}+{}".format(apositionRight, apositionDown))
+    aFillingWindow.geometry('300x300')
+    aFillingWindow.title("setup")
+    aFillingWindow.configure(bg = "papaya whip")
+    
+    x = tkinter.Button(aFillingWindow, text='Ready', command= lambda: aboutTheDestroy(aFillingWindow, "Done"))
+    x.place(relx = 0.5, rely = 0.1, anchor = CENTER)
+    x.configure(bg = "lemon chiffon")
     
 def exitProgram():
-    exit()
+    count = 0
+    while True:
+        msgBox = takeInput('Admin password:', 'Admin confirmation', True)
+        msgBox.waitForInput()
+        answer = msgBox.getString()
+        if answer != "Zoologicalfooding2020":
+            if count == 2:
+                tkinter.messagebox.showinfo("Error", "Too many unsuccessful attempts!")
+                return
+            tkinter.messagebox.showinfo("Error", "Wrong Password!")    
+            count = count + 1
+        else:
+            sys.exit()
+    
     
 
 
@@ -220,7 +307,7 @@ class takeInput(object):
 
     def __init__(self,requestMessage, windowName, isPassw):
         self.root = Tk()
-        
+        self.root.configure(bg = "papaya whip")
         windowWidth = 400 
         windowHeight = 50 
    
@@ -233,6 +320,7 @@ class takeInput(object):
     
         self.string = ''
         self.frame = Frame(self.root)
+        self.frame.configure(bg = "lemon chiffon")
         self.frame.pack()        
         self.acceptInput(requestMessage, isPassw)
         
@@ -240,6 +328,7 @@ class takeInput(object):
         r = self.frame
 
         k = Label(r,text=requestMessage)
+        k.configure(bg = "lemon chiffon")
         k.pack(side='left')
         self.e = Entry(r,text='Name')
         if isPassw:
@@ -247,6 +336,7 @@ class takeInput(object):
         self.e.pack(side='left')
         self.e.focus_set()
         b = Button(r,text='okay',command=self.gettext)
+        b.configure(bg = "lemon chiffon")
         b.pack(side='right')
 
     def gettext(self):
@@ -270,6 +360,7 @@ print(data)
 
 
 mainWindow = tkinter.Tk()
+mainWindow.title("Zoologicalfooding")
 
 
        
@@ -291,12 +382,10 @@ T1.pack()
 T1.place(relx = 0.5, rely = 0.3, anchor = CENTER)
 
 
-
-
 B0 = tkinter.Button(mainWindow, text = "Setup (Admin)", command = lambda: adminSetup(T1, mainWindow, B0), height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
 B1 = tkinter.Button(mainWindow, text = "Before filling", command = beforeFilling, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
 B2 = tkinter.Button(mainWindow, text = "After filling", command = afterFilling, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
-B3 = tkinter.Button(mainWindow, text = "Quit", command = exitProgram, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
+B3 = tkinter.Button(mainWindow, text = "Quit (Admin)", command = exitProgram, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
 
 B0.pack()
 B1.pack()
@@ -308,4 +397,6 @@ B1.place(relx=0.5, rely=0.60, anchor=CENTER)
 B2.place(relx=0.5, rely=0.70, anchor=CENTER)
 B3.place(relx=0.5, rely=0.90, anchor=CENTER)
 
-threading.Thread(target=mainWindow.mainloop()).start()
+mainWindow.mainloop()
+
+
