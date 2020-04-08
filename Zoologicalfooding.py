@@ -25,13 +25,15 @@ weight = -12512134123
 display = lcddriver.lcd()
 
 
+B1 = None
+B2 = None
 
 def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
     global weight
     adminWindow.destroy()
     B0["state"] = "disabled"
     B1["state"] = "active"
-    B2["state"] = "active"
+    
     T1.config(text = "Status: Working fine!", bg = "green")
     
     sendStatusHTML = urlopen("http://ipinfo.io/json").read()
@@ -383,6 +385,11 @@ def aboutTheDestroy(wind, txt, which):
     global afterTime
     global afterWeight
     
+    global B1
+    global B2
+    
+    global mainWindow
+    
     if which == "before":
         
         beforeWeight = weight
@@ -400,6 +407,10 @@ def aboutTheDestroy(wind, txt, which):
             weightChange = float("{0:.2f}".format(weightChange))
         
             print(weightChange, " gr food exhausted in ", timeChange, " second")
+            
+    B1["state"] = "disabled"
+    B2["state"] = "active"
+    mainWindow.update()        
     
     if which == "after":
         
@@ -414,6 +425,10 @@ def aboutTheDestroy(wind, txt, which):
         
         
         print("weight put: ", weightPut)
+        
+        B1["state"] = "active"
+        B2["state"] = "disabled"
+        mainWindow.update()
         
     
 def beforeFilling():
@@ -432,6 +447,9 @@ def beforeFilling():
     x = tkinter.Button(bFillingWindow, text='Ready', command= lambda: aboutTheDestroy(bFillingWindow, "The weight will be saved after this window closes", "before"))
     x.place(relx = 0.5, rely = 0.1, anchor = CENTER)
     x.configure(bg = "lemon chiffon")
+    
+    
+    
     
     
         
@@ -551,10 +569,12 @@ T1.pack()
 T1.place(relx = 0.5, rely = 0.3, anchor = CENTER)
 
 
+
 B0 = tkinter.Button(mainWindow, text = "Setup (Admin)", command = lambda: adminSetup(T1, mainWindow, B0, B1, B2), height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
-B1 = tkinter.Button(mainWindow, text = "Before filling", command = beforeFilling, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
+
 B2 = tkinter.Button(mainWindow, text = "After filling", command = afterFilling, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
 B3 = tkinter.Button(mainWindow, text = "Quit (Admin)", command = exitProgram, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
+B1 = tkinter.Button(mainWindow, text = "Before filling", command = beforeFilling, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
 
 B0.pack()
 B1.pack()
