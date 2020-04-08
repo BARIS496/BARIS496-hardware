@@ -14,12 +14,24 @@ import sys
 
 headers={'Content-type':'application/json', 'Accept':'application/json'}
 
+beforeWeight = -237.132
+beforeTime = -237.132
+
+afterWeight = -237.132
+afterTime = -237.132
+
+weight = -12512134123
 
 display = lcddriver.lcd()
 
-def complete(adminWindow, hx, T1, mainWindow, B0):
+
+
+def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
+    global weight
     adminWindow.destroy()
     B0["state"] = "disabled"
+    B1["state"] = "active"
+    B2["state"] = "active"
     T1.config(text = "Status: Working fine!", bg = "green")
     
     sendStatusHTML = urlopen("http://ipinfo.io/json").read()
@@ -51,7 +63,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0):
         
     while True:
         mainWindow.update()
-        wght=None
+        
         try:
             wght = hx.get_weight_mean(20)
         except:
@@ -88,6 +100,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0):
         display.lcd_display_string("%5.2f gr"%wght, 2)
             
         mainWindow.update()
+        
         weight = float("{0:.2f}".format(wght))
         if int(time.time() - last_time_measured) > 15:
             mainWindow.update()
@@ -117,7 +130,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0):
             last_time_measured = time.time()
             
     
-def adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0):
+def adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0, B1, B2):
     known_weight_grams = e1.get()
     
         
@@ -154,14 +167,14 @@ def adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0):
         #raise ValueError('Cannot calculate the incoming value')
 
 
-    a7 = tkinter.Button(adminWindow, text='Complete the setup and start measuring (exits admin mode)', command = lambda: complete(adminWindow, hx, T1, mainWindow, B0))
+    a7 = tkinter.Button(adminWindow, text='Complete the setup and start measuring (exits admin mode)', command = lambda: complete(adminWindow, hx, T1, mainWindow, B0, B1, B2))
     a7.place(relx = 0.5, rely = 0.7, anchor=CENTER)
     a7.configure(bg = "lemon chiffon")
        
     
                 
     
-def adminWindowWeightPut(adminWindow, reading, hx, T1, mainWindow, B0):
+def adminWindowWeightPut(adminWindow, reading, hx, T1, mainWindow, B0, B1, B2):
     reading = hx.get_data_mean()
     if reading:
             
@@ -172,7 +185,7 @@ def adminWindowWeightPut(adminWindow, reading, hx, T1, mainWindow, B0):
         e1 = tkinter.Entry(adminWindow)
         e1.configure(bg = "lemon chiffon")
         e1.place(relx = 0.5, rely = 0.5, anchor=CENTER)
-        a5 = tkinter.Button(adminWindow, text='enter', command = lambda: adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0))
+        a5 = tkinter.Button(adminWindow, text='enter', command = lambda: adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0, B1, B2))
         a5.configure(bg = "lemon chiffon")
         a5.place(relx = 0.5, rely = 0.55, anchor=CENTER)
         
@@ -195,7 +208,7 @@ def long_string(display, text = '', num_line = 1, num_cols = 20):
         display.lcd_display_string(text,num_line)
         display = lcddriver.lcd()
 
-def startHardware(adminWindow, T1, mainWindow, B0):
+def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
     try:
         display.lcd_display_string("Hi!", 1)
         display.lcd_display_string(":)", 2)
@@ -280,7 +293,7 @@ def startHardware(adminWindow, T1, mainWindow, B0):
         a2 = tkinter.Label(adminWindow, text="Place a known weighted object and press")
         a2.place(relx = 0.5, rely = 0.25, anchor=CENTER)
         a2.configure(bg = "lemon chiffon")
-        a3 = tkinter.Button(adminWindow, text='here', command= lambda: adminWindowWeightPut(adminWindow, reading, hx, T1, mainWindow, B0))
+        a3 = tkinter.Button(adminWindow, text='here', command= lambda: adminWindowWeightPut(adminWindow, reading, hx, T1, mainWindow, B0, B1, B2))
         a3.place(relx = 0.5, rely = 0.3, anchor=CENTER)
         a3.configure(bg = "lemon chiffon")
         
@@ -292,7 +305,7 @@ def startHardware(adminWindow, T1, mainWindow, B0):
         print('The program ended')    
             
 
-def adminSetup(T1, mainWindow, B0):
+def adminSetup(T1, mainWindow, B0, B1, B2):
     count = 0
     while True:
         msgBox = takeInput('Admin password:', 'Admin confirmation', True)
@@ -320,7 +333,7 @@ def adminSetup(T1, mainWindow, B0):
     adminWindow.title("setup")
     adminWindow.configure(bg = "papaya whip")
     
-    a1 = tkinter.Button(adminWindow, text='Start the hardware', command= lambda: threading.Thread(target=startHardware(adminWindow, T1, mainWindow, B0)).start())
+    a1 = tkinter.Button(adminWindow, text='Start the hardware', command= lambda: threading.Thread(target=startHardware(adminWindow, T1, mainWindow, B0, B1, B2)).start())
     a1.place(relx = 0.5, rely = 0.1, anchor = CENTER)
     a1.configure(bg = "lemon chiffon")
     
@@ -338,7 +351,7 @@ def adminSetup(T1, mainWindow, B0):
 
     
 
-def aboutTheDestroy(wind, txt):
+def aboutTheDestroy(wind, txt, which):
     aa = tkinter.Label(wind, text=txt, height=1, width=30, bg = "papaya whip")
     aa.configure(font=("Comic Sans MS", 12))
     aa.pack()
@@ -364,6 +377,45 @@ def aboutTheDestroy(wind, txt):
     time.sleep(1)
     wind.destroy()
     
+    
+    global beforeWeight
+    global beforeTime
+    global afterTime
+    global afterWeight
+    
+    if which == "before":
+        
+        beforeWeight = weight
+        beforeTime = time.time()
+        
+        
+        if afterTime == -237.132:
+            print("no guesses on the first time")
+        else:   
+            timeChange = beforeTime - afterTime
+            weightChange = beforeWeight - afterWeight
+            
+            
+            timeChange = float("{0:.2f}".format(timeChange))
+            weightChange = float("{0:.2f}".format(weightChange))
+        
+            print(weightChange, " gr food exhausted in ", timeChange, " second")
+    
+    if which == "after":
+        
+        afterWeight = weight
+        afterTime = time.time()
+      
+        weightPut = afterWeight - beforeWeight
+        
+        
+        
+        weightPut = float("{0:.2f}".format(weightPut))
+        
+        
+        print("weight put: ", weightPut)
+        
+    
 def beforeFilling():
     bFillingWindow = tkinter.Tk()
     awindowWidth = 300 
@@ -377,13 +429,15 @@ def beforeFilling():
     bFillingWindow.title("setup")
     bFillingWindow.configure(bg = "papaya whip")
     
-    x = tkinter.Button(bFillingWindow, text='Ready', command= lambda: aboutTheDestroy(bFillingWindow, "Put the food after this window closes"))
+    x = tkinter.Button(bFillingWindow, text='Ready', command= lambda: aboutTheDestroy(bFillingWindow, "The weight will be measured after this window closes", "before"))
     x.place(relx = 0.5, rely = 0.1, anchor = CENTER)
     x.configure(bg = "lemon chiffon")
     
     
+        
 
 def afterFilling():
+    
     aFillingWindow = tkinter.Tk()
     awindowWidth = 300 
     awindowHeight = 300 
@@ -396,7 +450,7 @@ def afterFilling():
     aFillingWindow.title("setup")
     aFillingWindow.configure(bg = "papaya whip")
     
-    x = tkinter.Button(aFillingWindow, text='Ready', command= lambda: aboutTheDestroy(aFillingWindow, "Done"))
+    x = tkinter.Button(aFillingWindow, text='Ready', command= lambda: aboutTheDestroy(aFillingWindow, "Approximate food exhaustion time will  be calculated after this window closes", "after"))
     x.place(relx = 0.5, rely = 0.1, anchor = CENTER)
     x.configure(bg = "lemon chiffon")
     
@@ -497,7 +551,7 @@ T1.pack()
 T1.place(relx = 0.5, rely = 0.3, anchor = CENTER)
 
 
-B0 = tkinter.Button(mainWindow, text = "Setup (Admin)", command = lambda: adminSetup(T1, mainWindow, B0), height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
+B0 = tkinter.Button(mainWindow, text = "Setup (Admin)", command = lambda: adminSetup(T1, mainWindow, B0, B1, B2), height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
 B1 = tkinter.Button(mainWindow, text = "Before filling", command = beforeFilling, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
 B2 = tkinter.Button(mainWindow, text = "After filling", command = afterFilling, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
 B3 = tkinter.Button(mainWindow, text = "Quit (Admin)", command = exitProgram, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
@@ -511,6 +565,9 @@ B0.place(relx = 0.5, rely = 0.50, anchor=CENTER)
 B1.place(relx=0.5, rely=0.60, anchor=CENTER)
 B2.place(relx=0.5, rely=0.70, anchor=CENTER)
 B3.place(relx=0.5, rely=0.90, anchor=CENTER)
+
+B1["state"] = "disabled"
+B2["state"] = "disabled"
 
 html = urlopen("http://ipinfo.io/json").read()
 data = json.loads(html.decode('utf-8'))
