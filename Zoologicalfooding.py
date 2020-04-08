@@ -73,6 +73,9 @@ def complete(adminWindow, hx, T1, mainWindow, B0):
             sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
+            time.sleep(3)
+            adminSetup(T1, mainWindow, B0)
+            
             
             
         a = float("{0:.2f}".format(wght))
@@ -221,6 +224,8 @@ def startHardware(adminWindow, T1, mainWindow, B0):
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
             sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
+            
+            raise ValueError('fix cables')
         
         reading=None
         try:
@@ -244,7 +249,7 @@ def startHardware(adminWindow, T1, mainWindow, B0):
             sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
-            input('hardware problem')
+            raise ValueError('fix cables')
         
         if not reading:
             T1.config(text = "Status: Hardware Problem", bg = "red")
