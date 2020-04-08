@@ -22,6 +22,23 @@ def complete(adminWindow, hx, T1, mainWindow, B0):
     B0["state"] = "disabled"
     T1.config(text = "Status: Working fine!", bg = "green")
     
+    sendStatusHTML = urlopen("http://ipinfo.io/json").read()
+    mainWindow.update()
+    data = json.loads(sendStatusHTML.decode('utf-8'))
+    sendStatusIP=data['ip']
+    sendStatusOrg=data['org']
+    sendStatusCity = data['city']
+    sendStatusCountry=data['country']
+    sendStatusRegion=data['region']
+    sendStatusLoc=data['loc']
+    sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
+    sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
+            
+    sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
+    sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
+    sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Working fine', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+    requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
+    
     wl = tkinter.Label(mainWindow, text="Weight:", height=1, width=20, bg = "navajowhite2")
     wl.configure(font=("Comic Sans MS", 17))
     wl.configure(bg = "lemon chiffon")
@@ -34,7 +51,30 @@ def complete(adminWindow, hx, T1, mainWindow, B0):
         
     while True:
         mainWindow.update()
-        wght = hx.get_weight_mean(20)
+        wght=None
+        try:
+            wght = hx.get_weight_mean(20)
+        except:
+            T1.config(text = "Status: Hardware Problem", bg = "red")
+            sendStatusHTML = urlopen("http://ipinfo.io/json").read()
+            mainWindow.update()
+            data = json.loads(sendStatusHTML.decode('utf-8'))
+            sendStatusIP=data['ip']
+            sendStatusOrg=data['org']
+            sendStatusCity = data['city']
+            sendStatusCountry=data['country']
+            sendStatusRegion=data['region']
+            sendStatusLoc=data['loc']
+            sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
+            sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
+                    
+            sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
+            sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
+            sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
+            
+            
+            
         a = float("{0:.2f}".format(wght))
         wl.config(text= "Weight: "+str(a)+" gr")
         print("%.2f" % wght, 'gr')
@@ -64,12 +104,12 @@ def complete(adminWindow, hx, T1, mainWindow, B0):
             mainWindow.update()
             URL3 = "https://restservices496.herokuapp.com/editContainer/761"
             #data = {'name':'real container','type':'dosdsdsg','longitude':1,'latitude':1,'address':'a','weight':0, 'ip':'a','city':'a','region':'a','country':'a'}
-            data = {'name':'real container','type':'cat','longitude':lat,'latitude':long,'address':'adrsssss','weight':weight, 'ip':IP,'city':city,'region':region,'country':country}
+            data = {'name':'real container','type':'cat','longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'Working fine', 'ip':IP,'city':city,'region':region,'country':country}
             r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
             mainWindow.update()
 
             w = str(weight)
-            print("Weight : " + w + " gr , Location: " + long + ", " + lat + ", " + city + ", " + country + ", IP: " + IP + " sent to database")
+            print("Weight : " + w + " gr , Location: " + lat + ", " + long + ", " + city + ", " + country + ", IP: " + IP + " sent to database")
 
             last_time_measured = time.time()
             
@@ -82,7 +122,23 @@ def adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0):
         value = float(known_weight_grams)
 
     except ValueError:
-        print('Incorrect type of value')
+        T1.config(text = "Status: Hardware Problem", bg = "red")
+        sendStatusHTML = urlopen("http://ipinfo.io/json").read()
+        mainWindow.update()
+        data = json.loads(sendStatusHTML.decode('utf-8'))
+        sendStatusIP=data['ip']
+        sendStatusOrg=data['org']
+        sendStatusCity = data['city']
+        sendStatusCountry=data['country']
+        sendStatusRegion=data['region']
+        sendStatusLoc=data['loc']
+        sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
+        sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
+                
+        sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
+        sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
+        sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+        requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
 
     ratio = reading / value
     hx.set_scale_ratio(ratio)
@@ -144,18 +200,72 @@ def startHardware(adminWindow, T1, mainWindow, B0):
 
         hx = HX711(dout_pin=5, pd_sck_pin=6)
 
-        error = hx.zero()
-
-        if error:
-            raise ValueError('Cannot tare the scale')
-
-        reading = hx.get_raw_data_mean()
+        error=None
+        try:
+            error = hx.zero()
+        except:
+            T1.config(text = "Status: Hardware Problem", bg = "red")
+            sendStatusHTML = urlopen("http://ipinfo.io/json").read()
+            mainWindow.update()
+            data = json.loads(sendStatusHTML.decode('utf-8'))
+            sendStatusIP=data['ip']
+            sendStatusOrg=data['org']
+            sendStatusCity = data['city']
+            sendStatusCountry=data['country']
+            sendStatusRegion=data['region']
+            sendStatusLoc=data['loc']
+            sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
+            sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
+                    
+            sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
+            sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
+            sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
+        
+        reading=None
+        try:
+            reading = hx.get_raw_data_mean()
+        except:
+            T1.config(text = "Status: Hardware Problem", bg = "red")
+            sendStatusHTML = urlopen("http://ipinfo.io/json").read()
+            mainWindow.update()
+            data = json.loads(sendStatusHTML.decode('utf-8'))
+            sendStatusIP=data['ip']
+            sendStatusOrg=data['org']
+            sendStatusCity = data['city']
+            sendStatusCountry=data['country']
+            sendStatusRegion=data['region']
+            sendStatusLoc=data['loc']
+            sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
+            sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
+                    
+            sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
+            sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
+            sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
+            
+            input('hardware problem')
         
         if not reading:
-            print('incorrect data', reading)
+            T1.config(text = "Status: Hardware Problem", bg = "red")
+            sendStatusHTML = urlopen("http://ipinfo.io/json").read()
+            mainWindow.update()
+            data = json.loads(sendStatusHTML.decode('utf-8'))
+            sendStatusIP=data['ip']
+            sendStatusOrg=data['org']
+            sendStatusCity = data['city']
+            sendStatusCountry=data['country']
+            sendStatusRegion=data['region']
+            sendStatusLoc=data['loc']
+            sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
+            sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
+                    
+            sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
+            sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
+            sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
 
-
-   
+            input('hardware problem')
        
    
     
@@ -397,6 +507,21 @@ B1.place(relx=0.5, rely=0.60, anchor=CENTER)
 B2.place(relx=0.5, rely=0.70, anchor=CENTER)
 B3.place(relx=0.5, rely=0.90, anchor=CENTER)
 
+html = urlopen("http://ipinfo.io/json").read()
+data = json.loads(html.decode('utf-8'))
+IP=data['ip']
+org=data['org']
+city = data['city']
+country=data['country']
+region=data['region']
+loc=data['loc']
+long = loc[:loc.index(',')]
+lat = loc[loc.index(',')+1:]
+headers={'Content-type':'application/json', 'Accept':'application/json'}
+URL3 = "https://restservices496.herokuapp.com/editContainer/761"
+data = {'name':'real container','type':'cat','longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':0, 'status': 'setup needed', 'ip':IP,'city':city,'region':region,'country':country}
+r33 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
+            
 mainWindow.mainloop()
 
 
