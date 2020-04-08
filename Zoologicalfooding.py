@@ -352,7 +352,7 @@ def adminSetup(T1, mainWindow, B0, B1, B2):
     
 
 def aboutTheDestroy(wind, txt, which):
-    aa = tkinter.Label(wind, text=txt, height=1, width=30, bg = "papaya whip")
+    aa = tkinter.Label(wind, text=txt, height=1, width=70, bg = "papaya whip")
     aa.configure(font=("Comic Sans MS", 12))
     aa.pack()
     aa.place(relx = 0.5, rely = 0.3, anchor = CENTER)
@@ -360,7 +360,7 @@ def aboutTheDestroy(wind, txt, which):
     bb = tkinter.Label(wind, text="5", height=1, width=1, bg = "papaya whip")
     bb.configure(font=("Comic Sans MS", 17))
     bb.pack()
-    bb.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+    bb.place(relx = 0.5, rely = 0.6, anchor = CENTER)
     wind.update()
     time.sleep(1)
     bb.config(text = "4")
@@ -418,18 +418,18 @@ def aboutTheDestroy(wind, txt, which):
     
 def beforeFilling():
     bFillingWindow = tkinter.Tk()
-    awindowWidth = 300 
+    awindowWidth = 700 
     awindowHeight = 300 
    
     apositionRight = int(bFillingWindow.winfo_screenwidth()/2 - awindowWidth/2)
     apositionDown = int(bFillingWindow.winfo_screenheight()/2 - awindowHeight/2)
  
     bFillingWindow.geometry("+{}+{}".format(apositionRight, apositionDown))
-    bFillingWindow.geometry('300x300')
+    bFillingWindow.geometry('700x300')
     bFillingWindow.title("setup")
     bFillingWindow.configure(bg = "papaya whip")
     
-    x = tkinter.Button(bFillingWindow, text='Ready', command= lambda: aboutTheDestroy(bFillingWindow, "The weight will be measured after this window closes", "before"))
+    x = tkinter.Button(bFillingWindow, text='Ready', command= lambda: aboutTheDestroy(bFillingWindow, "The weight will be saved after this window closes", "before"))
     x.place(relx = 0.5, rely = 0.1, anchor = CENTER)
     x.configure(bg = "lemon chiffon")
     
@@ -439,14 +439,14 @@ def beforeFilling():
 def afterFilling():
     
     aFillingWindow = tkinter.Tk()
-    awindowWidth = 300 
+    awindowWidth = 700 
     awindowHeight = 300 
    
     apositionRight = int(aFillingWindow.winfo_screenwidth()/2 - awindowWidth/2)
     apositionDown = int(aFillingWindow.winfo_screenheight()/2 - awindowHeight/2)
  
     aFillingWindow.geometry("+{}+{}".format(apositionRight, apositionDown))
-    aFillingWindow.geometry('300x300')
+    aFillingWindow.geometry('700x300')
     aFillingWindow.title("setup")
     aFillingWindow.configure(bg = "papaya whip")
     
