@@ -24,6 +24,10 @@ weight = -12512134123
 
 display = lcddriver.lcd()
 
+hx = None
+
+def tare():
+    hx.zero()
 
 B1 = None
 B2 = None
@@ -58,6 +62,11 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
     wl.configure(bg = "lemon chiffon")
     wl.pack()
     wl.place(relx = 0.5, rely = 0.4, anchor = CENTER)
+    
+    tareButton = tkinter.Button(mainWindow, text = "Tare", command = tare, height = 2, width = 15, bg = "orange", font = ("Comic Sans MS", 14))
+    tareButton.pack()
+    tareButton.place(relx = 0.5, rely = 0.8, anchor=CENTER)
+
 
     mainWindow.update()
     URL3 = "https://restservices496.herokuapp.com/editContainer/761"
@@ -88,7 +97,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             time.sleep(3)
-            adminSetup(T1, mainWindow, B0)
+            adminSetup(T1, mainWindow, B0, B1, B2)
             
             
             
@@ -216,6 +225,7 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
         display.lcd_display_string(":)", 2)
         GPIO.setmode(GPIO.BCM)
 
+        global hx
         hx = HX711(dout_pin=5, pd_sck_pin=6)
 
         error=None
