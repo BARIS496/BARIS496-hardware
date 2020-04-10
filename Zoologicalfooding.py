@@ -361,7 +361,9 @@ def adminSetup(T1, mainWindow, B0, B1, B2):
 #   e1.grid(row=2, column=1)
 #   e2.grid(row=3, column=1)
 
-    
+afterFillingCounter = 0
+estimationLabel = None
+estimation = ""
 
 def aboutTheDestroy(wind, txt, which):
     aa = tkinter.Label(wind, text=txt, height=1, width=70, bg = "papaya whip")
@@ -400,17 +402,24 @@ def aboutTheDestroy(wind, txt, which):
     
     global mainWindow
     
+    global afterFillingCounter
+    global estimationLabel
+    global estimation
+    
     if which == "before":
         
         beforeWeight = weight
         beforeTime = time.time()
-        
-        
+       
+
         if afterTime == -237.132:
             print("no guesses on the first time")
+            
+        
+        
         else:   
             timeChange = beforeTime - afterTime
-            weightChange = beforeWeight - afterWeight
+            weightChange = afterWeight - beforeWeight
             
             
             timeChange = float("{0:.2f}".format(timeChange))
@@ -436,6 +445,24 @@ def aboutTheDestroy(wind, txt, which):
         
         print("weight put: ", weightPut)
         
+         
+        if afterFillingCounter == 1:
+            estimationLabel = tkinter.Label(mainWindow, text="Approximate exhaustion time: " + estimation, height=2, width=50, bg = "navajowhite2")
+            estimationLabel.configure(font=("Comic Sans MS", 17))
+            estimationLabel.pack()
+            estimationLabel.place(relx = 0.1, rely = 0.5, anchor = CENTER)
+            afterFillingCounter = afterFillingCounter + 1
+            
+            
+        if afterFillingCounter > 1:
+            #estimation = ?
+            estimationLabel.config(text = "Approximate exhaustion time: " + estimation, bg = "navajowhite2")
+            
+            
+        if afterFillingCounter == 0:
+            afterFillingCounter = afterFillingCounter + 1
+            
+            
         B1["state"] = "active"
         B2["state"] = "disabled"
         mainWindow.update()
