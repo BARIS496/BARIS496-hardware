@@ -12,6 +12,41 @@ from urllib.request import urlopen
 import threading
 import sys
 
+URL = "http://restservices496.herokuapp.com/containers"
+id = 1
+PARAMS = {'container_id':id}
+r = requests.get(url = URL, params = PARAMS)
+data = r.json()
+
+password = None
+
+countt = 0
+
+while countt < len(data):
+    if data[countt]['containerID'] == 761:
+        password = data[countt]['passCont']
+        break
+    countt = countt + 1
+
+
+
+html = urlopen("http://ipinfo.io/json").read()
+data = json.loads(html.decode('utf-8'))
+IP=data['ip']
+org=data['org']
+city = data['city']
+country=data['country']
+region=data['region']
+loc=data['loc']
+long = loc[:loc.index(',')]
+lat = loc[loc.index(',')+1:]
+headers={'Content-type':'application/json', 'Accept':'application/json'}
+URL3 = "https://restservices496.herokuapp.com/editContainer/761"
+data = {'name':'real container','type':'cat','longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':0, 'passCont': password,'status': 'setup needed', 'ip':IP,'city':city,'region':region,'country':country}
+r33 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
+
+
+
 headers={'Content-type':'application/json', 'Accept':'application/json'}
 
 beforeWeight = -237.132
@@ -34,6 +69,7 @@ B2 = None
 
 def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
     global weight
+    global password
     adminWindow.destroy()
     B0["state"] = "disabled"
     B1["state"] = "active"
@@ -54,7 +90,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
             
     sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
     sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-    sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Working fine', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+    sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Working fine', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
     requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
     
     wl = tkinter.Label(mainWindow, text="Weight:", height=1, width=20, bg = "navajowhite2")
@@ -71,7 +107,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
     mainWindow.update()
     URL3 = "https://restservices496.herokuapp.com/editContainer/761"
     last_time_measured = time.time()
-        
+     
     while True:
         mainWindow.update()
         
@@ -93,7 +129,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
                     
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             time.sleep(3)
@@ -126,12 +162,13 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
             loc=data['loc']
             long = loc[:loc.index(',')]
             lat = loc[loc.index(',')+1:]
-
+            
+            
             headers={'Content-type':'application/json', 'Accept':'application/json'}
             mainWindow.update()
             URL3 = "https://restservices496.herokuapp.com/editContainer/761"
             #data = {'name':'real container','type':'dosdsdsg','longitude':1,'latitude':1,'address':'a','weight':0, 'ip':'a','city':'a','region':'a','country':'a'}
-            data = {'name':'real container','type':'cat','longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'Working fine', 'ip':IP,'city':city,'region':region,'country':country}
+            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'Working fine', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020'}
             r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
             mainWindow.update()
 
@@ -161,10 +198,10 @@ def adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0, B1, B
         sendStatusLoc=data['loc']
         sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
         sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
-                
+        global password        
         sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
         sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-        sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+        sendStatus = {'name':'real container','type':'cat', 'passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
         requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
 
     ratio = reading / value
@@ -220,6 +257,7 @@ def long_string(display, text = '', num_line = 1, num_cols = 20):
         display = lcddriver.lcd()
 
 def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
+    global password
     try:
         display.lcd_display_string("Hi!", 1)
         display.lcd_display_string(":)", 2)
@@ -244,10 +282,10 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
             sendStatusLoc=data['loc']
             sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
             sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
-                    
+             
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'name':'real container','type':'cat', 'passCont':'password','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             raise ValueError('fix cables')
@@ -268,10 +306,10 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
             sendStatusLoc=data['loc']
             sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
             sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
-                    
+                 
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             raise ValueError('fix cables')
@@ -289,10 +327,10 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
             sendStatusLoc=data['loc']
             sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
             sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
-                    
+            
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'name':'real container','type':'cat','passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
 
             input('hardware problem')
@@ -319,11 +357,14 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
 
 def adminSetup(T1, mainWindow, B0, B1, B2):
     count = 0
+    global password
     while True:
         msgBox = takeInput('Admin password:', 'Admin confirmation', True)
         msgBox.waitForInput()
         answer = msgBox.getString()
-        if answer != "Zoologicalfooding2020":
+        print(answer)
+        print(password)
+        if answer != password:
             if count == 2:
                 a = tkinter.messagebox.showinfo("Error", "Too many unsuccessful attempts!")
                 return
@@ -574,13 +615,6 @@ class takeInput(object):
         self.root.wait_window()
         
         
-URL = "http://restservices496.herokuapp.com/containers"
-id = 1
-PARAMS = {'container_id':id}
-r = requests.get(url = URL, params = PARAMS)
-data = r.json()
-print("Existing containers:")
-print(data)
 
 
 mainWindow = tkinter.Tk()
@@ -626,21 +660,13 @@ B3.place(relx=0.5, rely=0.90, anchor=CENTER)
 B1["state"] = "disabled"
 B2["state"] = "disabled"
 
-html = urlopen("http://ipinfo.io/json").read()
-data = json.loads(html.decode('utf-8'))
-IP=data['ip']
-org=data['org']
-city = data['city']
-country=data['country']
-region=data['region']
-loc=data['loc']
-long = loc[:loc.index(',')]
-lat = loc[loc.index(',')+1:]
-headers={'Content-type':'application/json', 'Accept':'application/json'}
-URL3 = "https://restservices496.herokuapp.com/editContainer/761"
-data = {'name':'real container','type':'cat','longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':0, 'status': 'setup needed', 'ip':IP,'city':city,'region':region,'country':country}
-r33 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
-            
+
+
+
 mainWindow.mainloop()
+
+
+            
+
 
 
