@@ -19,6 +19,7 @@ r = requests.get(url = URL, params = PARAMS)
 data = r.json()
 
 password = None
+infoLabel = None
 
 countt = 0
 
@@ -285,7 +286,7 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
              
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat', 'passCont':'password','longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'name':'real container','type':'cat', 'passCont': password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             raise ValueError('fix cables')
@@ -447,6 +448,8 @@ def aboutTheDestroy(wind, txt, which):
     global estimationLabel
     global estimation
     
+    global infoLabel
+    
     if which == "before":
         
         beforeWeight = weight
@@ -467,6 +470,7 @@ def aboutTheDestroy(wind, txt, which):
             weightChange = float("{0:.2f}".format(weightChange))
         
             print(weightChange, " gr food exhausted in ", timeChange, " second")
+            infoLabel.config(text = str(weightChange) + " gr food exhausted in " + str(timeChange) + " second")
             
     B1["state"] = "disabled"
     B2["state"] = "active"
@@ -493,15 +497,20 @@ def aboutTheDestroy(wind, txt, which):
             estimationLabel.pack()
             estimationLabel.place(relx = 0.1, rely = 0.5, anchor = CENTER)
             afterFillingCounter = afterFillingCounter + 1
+            infoLabel.config(text = "Weight put: " + str(weightPut))
             
             
         if afterFillingCounter > 1:
             #estimation = ?
             estimationLabel.config(text = "Approximate exhaustion time: " + estimation, bg = "navajowhite2")
-            
+            infoLabel.config(text = "Weight put: " + str(weightPut))
             
         if afterFillingCounter == 0:
             afterFillingCounter = afterFillingCounter + 1
+            infoLabel = tkinter.Label(mainWindow, text="Weight put: " + str(weightPut), height=2, width=50, bg = "navajowhite2")
+            infoLabel.configure(font=("Comic Sans MS", 17))
+            infoLabel.pack()
+            infoLabel.place(relx = 0.2, rely = 0.8, anchor = CENTER)
             
             
         B1["state"] = "active"
