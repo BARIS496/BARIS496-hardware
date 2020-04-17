@@ -12,6 +12,41 @@ from urllib.request import urlopen
 import threading
 import sys
 
+import numpy as np
+from sklearn import preprocessing
+from sklearn.linear_model import LinearRegression
+
+train_features = np.array([[0]])
+train_results = np.array([0])
+
+classifier = LinearRegression()
+
+# helper method to predict_new_result and incremental_fit
+def train(train_features, train_results):
+    # train_features = minmax_scale.fit_transform(train_features)
+ 
+    classifier.fit(train_features, train_results)
+
+
+# new_train_features = [[5], [6]]
+# new_train_results = [[10]]
+def incremental_fit(new_train_features, new_train_results, train_features, train_results):
+    train_features = np.append(train_features, new_train_features)
+    train_features = np.array([train_features]).reshape(-1, 1)
+
+    train_results = np.append(train_results, new_train_results)
+    train_results = np.array([train_results]).reshape(-1, 1)
+    train(train_features, train_results)
+    return train_features, train_results
+
+def predict_new_value(train_features, train_results, feature_to_be_predicted):
+    train(train_features, train_results)
+    # scaled_feature = minmax_scale.transform(np.array([feature_to_be_predicted]))
+    predicted_result = classifier.predict(np.array([feature_to_be_predicted]))
+    return predicted_result
+
+
+
 URL = "http://restservices496.herokuapp.com/containers"
 id = 1
 PARAMS = {'container_id':id}
@@ -450,6 +485,9 @@ def aboutTheDestroy(wind, txt, which):
     
     global infoLabel
     
+    global train_features
+    global train_results
+    
     if which == "before":
         
         beforeWeight = weight
@@ -465,9 +503,14 @@ def aboutTheDestroy(wind, txt, which):
             timeChange = beforeTime - afterTime
             weightChange = afterWeight - beforeWeight
             
-            
+            new_train_features = np.array([weightChange])
+            new_train_results = np.array([timeChange])
+            train_features, train_results = incremental_fit(new_train_features, new_train_results, train_features, train_results)
+             
             timeChange = float("{0:.2f}".format(timeChange))
             weightChange = float("{0:.2f}".format(weightChange))
+            
+            
         
             print(weightChange, " gr food exhausted in ", timeChange, " second")
             infoLabel.config(text = str(weightChange) + " gr food exhausted in " + str(timeChange) + " second")
@@ -492,25 +535,36 @@ def aboutTheDestroy(wind, txt, which):
         
          
         if afterFillingCounter == 1:
-            estimationLabel = tkinter.Label(mainWindow, text="Approximate exhaustion time: " + estimation, height=2, width=50, bg = "navajowhite2")
+            
+            estimation = predict_new_value(train_features, train_results, [weightPut])
+            estimationLabel = tkinter.Label(mainWindow, text="Approximate exhaustion time: " + str(estimation), height=2, width=50, bg = "navajowhite2")
+            
             estimationLabel.configure(font=("Comic Sans MS", 17))
             estimationLabel.pack()
-            estimationLabel.place(relx = 0.1, rely = 0.5, anchor = CENTER)
+            estimationLabel.place(relx = 0.2, rely = 0.8, anchor = CENTER)
             afterFillingCounter = afterFillingCounter + 1
             infoLabel.config(text = "Weight put: " + str(weightPut))
             
             
+            
+            
+            
+            
+            
         if afterFillingCounter > 1:
             #estimation = ?
-            estimationLabel.config(text = "Approximate exhaustion time: " + estimation, bg = "navajowhite2")
+            
             infoLabel.config(text = "Weight put: " + str(weightPut))
+            
+            estimation = predict_new_value(train_features, train_results, [weightPut])
+            estimationLabel.config(text="Approximate exhaustion time: " + str(estimation))
             
         if afterFillingCounter == 0:
             afterFillingCounter = afterFillingCounter + 1
             infoLabel = tkinter.Label(mainWindow, text="Weight put: " + str(weightPut), height=2, width=50, bg = "navajowhite2")
             infoLabel.configure(font=("Comic Sans MS", 17))
             infoLabel.pack()
-            infoLabel.place(relx = 0.2, rely = 0.8, anchor = CENTER)
+            infoLabel.place(relx = 0.2, rely = 0.7, anchor = CENTER)
             
             
         B1["state"] = "active"
