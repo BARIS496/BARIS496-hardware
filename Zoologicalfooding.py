@@ -21,6 +21,7 @@ train_results = np.array([0])
 
 classifier = LinearRegression()
 
+estimationLast = None
 # helper method to predict_new_result and incremental_fit
 def train(train_features, train_results):
     # train_features = minmax_scale.fit_transform(train_features)
@@ -106,6 +107,7 @@ B2 = None
 def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
     global weight
     global password
+    global estimationLast
     adminWindow.destroy()
     B0["state"] = "disabled"
     B1["state"] = "active"
@@ -204,7 +206,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
             mainWindow.update()
             URL3 = "https://restservices496.herokuapp.com/editContainer/761"
             #data = {'name':'real container','type':'dosdsdsg','longitude':1,'latitude':1,'address':'a','weight':0, 'ip':'a','city':'a','region':'a','country':'a'}
-            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020'}
+            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020', 'estimation':estimationLast}
             r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
             mainWindow.update()
 
@@ -488,6 +490,8 @@ def aboutTheDestroy(wind, txt, which):
     global train_features
     global train_results
     
+    global estimationLast
+    
     if which == "before":
         
         beforeWeight = weight
@@ -537,29 +541,90 @@ def aboutTheDestroy(wind, txt, which):
         if afterFillingCounter > 1:
             #estimation = ?
             
-            estimation = predict_new_value(train_features, train_results, [weightPut])
-            
-            estimationS = str(estimation)
-            print(estimationS)
-            estimationF = estimationS[2:-2]
-            print(estimationF)
-            estimationF = "{0:.2f}".format(float(estimationF))
-            print(estimationF)
-            
             infoLabel.config(text = "Weight put: " + str(weightPut))
             
-            
-            estimationLabel.config(text="Approximate exhaustion time: " + estimationF + " second")
-            
-        if afterFillingCounter == 1:
-            estimation = predict_new_value(train_features, train_results, [weightPut])
+            estimation = predict_new_value(train_features, train_results, [weight])
             estimationS = str(estimation)
             print(estimationS)
             estimationF = estimationS[2:-2]
-            print(estimationF)
+            
             estimationF = "{0:.2f}".format(float(estimationF))
             print(estimationF)
-            estimationLabel = tkinter.Label(mainWindow, text="Approximate exhaustion time: " + estimationF + " second", height=2, width=50, bg = "navajowhite2")
+            
+            estimationHelper = float(estimationF)
+            
+            
+            
+            estimationLast = str(int(estimationHelper/3600)) + " hour " + str((int((estimationHelper%3600)/60))) + " minute " + str(((int((estimationHelper%3600))%60))) + " second" 
+            
+            print(weight)
+            
+            html = urlopen("http://ipinfo.io/json").read()
+            mainWindow.update()
+            data = json.loads(html.decode('utf-8'))
+            IP=data['ip']
+            org=data['org']
+            city = data['city']
+            country=data['country']
+            region=data['region']
+            loc=data['loc']
+            long = loc[:loc.index(',')]
+            lat = loc[loc.index(',')+1:]
+            
+            
+            headers={'Content-type':'application/json', 'Accept':'application/json'}
+            mainWindow.update()
+            URL3 = "https://restservices496.herokuapp.com/editContainer/761"
+            #data = {'name':'real container','type':'dosdsdsg','longitude':1,'latitude':1,'address':'a','weight':0, 'ip':'a','city':'a','region':'a','country':'a'}
+            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020', 'estimation':estimationLast}
+            r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
+            
+            
+            
+            
+            
+            estimationLabel.config(text="Approximate exhaustion time: " + estimationLast)
+            
+        if afterFillingCounter == 1:
+            estimation = predict_new_value(train_features, train_results, [weight])
+            
+            estimationS = str(estimation)
+            print(estimationS)
+            estimationF = estimationS[2:-2]
+            
+            estimationF = "{0:.2f}".format(float(estimationF))
+            print(estimationF)
+            
+            estimationHelper = float(estimationF)
+            
+            
+            
+            estimationLast = str(int(estimationHelper/3600)) + " hour " + str((int((estimationHelper%3600)/60))) + " minute " + str(((int((estimationHelper%3600))%60))) + " second" 
+            
+            print(weight)
+            
+            html = urlopen("http://ipinfo.io/json").read()
+            mainWindow.update()
+            data = json.loads(html.decode('utf-8'))
+            IP=data['ip']
+            org=data['org']
+            city = data['city']
+            country=data['country']
+            region=data['region']
+            loc=data['loc']
+            long = loc[:loc.index(',')]
+            lat = loc[loc.index(',')+1:]
+            
+            
+            headers={'Content-type':'application/json', 'Accept':'application/json'}
+            mainWindow.update()
+            URL3 = "https://restservices496.herokuapp.com/editContainer/761"
+            #data = {'name':'real container','type':'dosdsdsg','longitude':1,'latitude':1,'address':'a','weight':0, 'ip':'a','city':'a','region':'a','country':'a'}
+            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020', 'estimation':estimationLast}
+            r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
+            
+                        
+            estimationLabel = tkinter.Label(mainWindow, text="Approximate exhaustion time: " + estimationLast, height=2, width=50, bg = "navajowhite2")
             
             estimationLabel.configure(font=("Comic Sans MS", 17))
             estimationLabel.pack()
@@ -593,7 +658,7 @@ def beforeFilling():
  
     bFillingWindow.geometry("+{}+{}".format(apositionRight, apositionDown))
     bFillingWindow.geometry('700x300')
-    bFillingWindow.title("setup")
+    bFillingWindow.title("Before Filling")
     bFillingWindow.configure(bg = "papaya whip")
     
     x = tkinter.Button(bFillingWindow, text='Ready', command= lambda: aboutTheDestroy(bFillingWindow, "The weight will be saved after this window closes", "before"))
@@ -617,7 +682,7 @@ def afterFilling():
  
     aFillingWindow.geometry("+{}+{}".format(apositionRight, apositionDown))
     aFillingWindow.geometry('700x300')
-    aFillingWindow.title("setup")
+    aFillingWindow.title("After Filling")
     aFillingWindow.configure(bg = "papaya whip")
     
     x = tkinter.Button(aFillingWindow, text='Ready', command= lambda: aboutTheDestroy(aFillingWindow, "Approximate food exhaustion time will  be calculated after this window closes", "after"))
