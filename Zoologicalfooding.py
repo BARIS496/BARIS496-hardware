@@ -78,7 +78,7 @@ long = loc[:loc.index(',')]
 lat = loc[loc.index(',')+1:]
 headers={'Content-type':'application/json', 'Accept':'application/json'}
 URL3 = "https://restservices496.herokuapp.com/editContainer/761"
-data = {'name':'real container','type':'cat','longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':0, 'passCont': password,'status': 'setup needed', 'ip':IP,'city':city,'region':region,'country':country}
+data = {'name':'real container','type':'cat','longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':0, 'passCont': password,'status': '1', 'ip':IP,'city':city,'region':region,'country':country}
 r33 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
 
 
@@ -126,7 +126,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
             
     sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
     sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-    sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Working fine', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+    sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'0', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
     requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
     
     wl = tkinter.Label(mainWindow, text="Weight:", height=1, width=20, bg = "navajowhite2")
@@ -165,7 +165,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
                     
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             time.sleep(3)
@@ -204,7 +204,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
             mainWindow.update()
             URL3 = "https://restservices496.herokuapp.com/editContainer/761"
             #data = {'name':'real container','type':'dosdsdsg','longitude':1,'latitude':1,'address':'a','weight':0, 'ip':'a','city':'a','region':'a','country':'a'}
-            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'Working fine', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020'}
+            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020'}
             r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
             mainWindow.update()
 
@@ -237,7 +237,7 @@ def adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0, B1, B
         global password        
         sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
         sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-        sendStatus = {'name':'real container','type':'cat', 'passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+        sendStatus = {'name':'real container','type':'cat', 'passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
         requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
 
     ratio = reading / value
@@ -321,7 +321,7 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
              
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat', 'passCont': password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'name':'real container','type':'cat', 'passCont': password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             raise ValueError('fix cables')
@@ -345,7 +345,7 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
                  
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             raise ValueError('fix cables')
@@ -366,7 +366,7 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
             
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat','passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'Hardware problem', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'name':'real container','type':'cat','passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
 
             input('hardware problem')
@@ -534,30 +534,41 @@ def aboutTheDestroy(wind, txt, which):
         print("weight put: ", weightPut)
         
          
-        if afterFillingCounter == 1:
+        if afterFillingCounter > 1:
+            #estimation = ?
             
             estimation = predict_new_value(train_features, train_results, [weightPut])
-            estimationLabel = tkinter.Label(mainWindow, text="Approximate exhaustion time: " + str(estimation), height=2, width=50, bg = "navajowhite2")
+            
+            estimationS = str(estimation)
+            print(estimationS)
+            estimationF = estimationS[2:-2]
+            print(estimationF)
+            estimationF = "{0:.2f}".format(float(estimationF))
+            print(estimationF)
+            
+            infoLabel.config(text = "Weight put: " + str(weightPut))
+            
+            
+            estimationLabel.config(text="Approximate exhaustion time: " + estimationF + " second")
+            
+        if afterFillingCounter == 1:
+            estimation = predict_new_value(train_features, train_results, [weightPut])
+            estimationS = str(estimation)
+            print(estimationS)
+            estimationF = estimationS[2:-2]
+            print(estimationF)
+            estimationF = "{0:.2f}".format(float(estimationF))
+            print(estimationF)
+            estimationLabel = tkinter.Label(mainWindow, text="Approximate exhaustion time: " + estimationF + " second", height=2, width=50, bg = "navajowhite2")
             
             estimationLabel.configure(font=("Comic Sans MS", 17))
             estimationLabel.pack()
             estimationLabel.place(relx = 0.2, rely = 0.8, anchor = CENTER)
             afterFillingCounter = afterFillingCounter + 1
             infoLabel.config(text = "Weight put: " + str(weightPut))
+                 
             
             
-            
-            
-            
-            
-            
-        if afterFillingCounter > 1:
-            #estimation = ?
-            
-            infoLabel.config(text = "Weight put: " + str(weightPut))
-            
-            estimation = predict_new_value(train_features, train_results, [weightPut])
-            estimationLabel.config(text="Approximate exhaustion time: " + str(estimation))
             
         if afterFillingCounter == 0:
             afterFillingCounter = afterFillingCounter + 1
