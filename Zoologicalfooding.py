@@ -176,6 +176,8 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
             
             
         a = float("{0:.2f}".format(wght))
+        if a < 0:
+            a = 0
         wl.config(text= "Weight: "+str(a)+" gr")
         print("%.2f" % wght, 'gr')
         mainWindow.update()
@@ -187,6 +189,7 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
         mainWindow.update()
         
         weight = float("{0:.2f}".format(wght))
+       
         if int(time.time() - last_time_measured) > 15:
             mainWindow.update()
             html = urlopen("http://ipinfo.io/json").read()
@@ -396,10 +399,14 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
 def adminSetup(T1, mainWindow, B0, B1, B2):
     count = 0
     global password
+    global windowChecker
     while True:
         msgBox = takeInput('Admin password:', 'Admin confirmation', True)
         msgBox.waitForInput()
         answer = msgBox.getString()
+        if windowChecker:
+            windowChecker = False
+            return
         print(answer)
         print(password)
         if answer != password:
@@ -691,11 +698,16 @@ def afterFilling():
     
 def exitProgram():
     count = 0
+    global windowChecker
     while True:
         msgBox = takeInput('Admin password:', 'Admin confirmation', True)
         msgBox.waitForInput()
         answer = msgBox.getString()
-        if answer != "Zoologicalfooding2020":
+        if windowChecker:
+            windowChecker = False
+            return
+        
+        if answer != password:
             if count == 2:
                 tkinter.messagebox.showinfo("Error", "Too many unsuccessful attempts!")
                 return
@@ -706,12 +718,23 @@ def exitProgram():
     
     
 
-
+windowChecker = False
 class takeInput(object):
-
+    
+    
+    def closeWindow(self):
+        global windowChecker
+        
+        windowChecker = True
+        self.root.destroy()
+    
+    
     def __init__(self,requestMessage, windowName, isPassw):
         self.root = Tk()
         self.root.configure(bg = "papaya whip")
+        self.root.protocol('WM_DELETE_WINDOW', self.closeWindow)  # root is your root window
+
+
         windowWidth = 400 
         windowHeight = 50 
    
@@ -725,7 +748,7 @@ class takeInput(object):
         self.string = ''
         self.frame = Frame(self.root)
         self.frame.configure(bg = "lemon chiffon")
-        self.frame.pack()        
+        self.frame.pack()
         self.acceptInput(requestMessage, isPassw)
         
     def acceptInput(self,requestMessage, isPassw):
