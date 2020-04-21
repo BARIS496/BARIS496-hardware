@@ -67,6 +67,12 @@ while countt < len(data):
     countt = countt + 1
 
 
+saveName = data[countt]['name']
+saveType = data[countt]['type']
+saveDonatesList = data[countt]['donatesList']
+saveCommentsList = data[countt]['commentsList']
+
+
 
 html = urlopen("http://ipinfo.io/json").read()
 data = json.loads(html.decode('utf-8'))
@@ -80,7 +86,7 @@ long = loc[:loc.index(',')]
 lat = loc[loc.index(',')+1:]
 headers={'Content-type':'application/json', 'Accept':'application/json'}
 URL3 = "https://restservices496.herokuapp.com/editContainer/761"
-data = {'name':'real container','type':'cat','longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':0, 'passCont': password,'status': '1', 'ip':IP,'city':city,'region':region,'country':country}
+data = {'donatesList': saveDonatesList,'commentsList':saveCommentsList, 'name':saveName,'type':saveType,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':0, 'passCont': password,'status': '1', 'ip':IP,'city':city,'region':region,'country':country}
 r33 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
 
 
@@ -129,7 +135,30 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
             
     sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
     sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-    sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'0', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+    
+    URL = "http://restservices496.herokuapp.com/containers"
+    id = 1
+    PARAMS = {'container_id':id}
+    r = requests.get(url = URL, params = PARAMS)
+    data = r.json()
+
+    
+
+    countt = 0
+
+    while countt < len(data):
+        if data[countt]['containerID'] == 761:
+            password = data[countt]['passCont']
+            break
+        countt = countt + 1
+
+
+    saveName = data[countt]['name']
+    saveType = data[countt]['type']
+    saveDonatesList = data[countt]['donatesList']
+    saveCommentsList = data[countt]['commentsList']
+
+    sendStatus = {'donatesList': saveDonatesList, 'commentsList':saveCommentsList, 'name':saveName,'type':saveType, 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'0', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
     requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
     
     wl = tkinter.Label(mainWindow, text="Weight:", height=1, width=20, bg = "navajowhite2")
@@ -170,7 +199,28 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
                     
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            URL = "http://restservices496.herokuapp.com/containers"
+            id = 1
+            PARAMS = {'container_id':id}
+            r = requests.get(url = URL, params = PARAMS)
+            data = r.json()
+
+           
+
+            countt = 0
+
+            while countt < len(data):
+                if data[countt]['containerID'] == 761:
+                    password = data[countt]['passCont']
+                    break
+                countt = countt + 1
+
+
+            saveName = data[countt]['name']
+            saveType = data[countt]['type']
+            saveDonatesList = data[countt]['donatesList']
+            saveCommentsList = data[countt]['commentsList']
+            sendStatus = {'donatesList': saveDonatesList, 'commentsList':saveCommentsList, 'name':saveName,'type':saveType, 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             time.sleep(3)
@@ -181,6 +231,8 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
         a = float("{0:.2f}".format(wght))
         if a < 0:
             a = 0
+        if wght < 0:
+            wght = 0
         wl.config(text= "Weight: "+str(a)+" gr")
         print("%.2f" % wght, 'gr')
         mainWindow.update()
@@ -192,6 +244,9 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
         mainWindow.update()
         
         weight = float("{0:.2f}".format(wght))
+        
+        if weight < 0:
+            weight = 0
        
         if int(time.time() - last_time_measured) > 15:
             mainWindow.update()
@@ -211,8 +266,30 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
             headers={'Content-type':'application/json', 'Accept':'application/json'}
             mainWindow.update()
             URL3 = "https://restservices496.herokuapp.com/editContainer/761"
+            
+            URL = "http://restservices496.herokuapp.com/containers"
+            id = 1
+            PARAMS = {'container_id':id}
+            r = requests.get(url = URL, params = PARAMS)
+            data = r.json()
+
+
+            countt = 0
+
+            while countt < len(data):
+                if data[countt]['containerID'] == 761:
+                    password = data[countt]['passCont']
+                    break
+                countt = countt + 1
+
+
+            saveName = data[countt]['name']
+            saveType = data[countt]['type']
+            saveDonatesList = data[countt]['donatesList']
+            saveCommentsList = data[countt]['commentsList']
+
             #data = {'name':'real container','type':'dosdsdsg','longitude':1,'latitude':1,'address':'a','weight':0, 'ip':'a','city':'a','region':'a','country':'a'}
-            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020', 'estimation':estimationLast}
+            data = {'donatesList': saveDonatesList, 'commentsList': saveCommentsList, 'name':saveName,'type':saveType,'passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020', 'estimation':estimationLast}
             r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
             mainWindow.update()
 
@@ -242,10 +319,33 @@ def adminWindowGetWeight(adminWindow, reading, hx, e1, T1, mainWindow, B0, B1, B
         sendStatusLoc=data['loc']
         sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
         sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
-        global password        
+        global password
+        
+        URL = "http://restservices496.herokuapp.com/containers"
+        id = 1
+        PARAMS = {'container_id':id}
+        r = requests.get(url = URL, params = PARAMS)
+        data = r.json()
+
+     
+        countt = 0
+
+        while countt < len(data):
+            if data[countt]['containerID'] == 761:
+                password = data[countt]['passCont']
+                break
+            countt = countt + 1
+
+
+        saveName = data[countt]['name']
+        saveType = data[countt]['type']
+        saveDonatesList = data[countt]['donatesList']
+        saveCommentsList = data[countt]['commentsList']
+
+
         sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
         sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-        sendStatus = {'name':'real container','type':'cat', 'passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+        sendStatus = {'donatesList': saveDonatesList, 'commentsList': saveCommentsList, 'name':saveName,'type':saveType, 'passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
         requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
 
     ratio = reading / value
@@ -328,10 +428,33 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
             sendStatusLoc=data['loc']
             sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
             sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
+            
+            URL = "http://restservices496.herokuapp.com/containers"
+            id = 1
+            PARAMS = {'container_id':id}
+            r = requests.get(url = URL, params = PARAMS)
+            data = r.json()
+
+         
+            countt = 0
+
+            while countt < len(data):
+                if data[countt]['containerID'] == 761:
+                    password = data[countt]['passCont']
+                    break
+                countt = countt + 1
+
+
+            saveName = data[countt]['name']
+            saveType = data[countt]['type']
+            saveDonatesList = data[countt]['donatesList']
+            saveCommentsList = data[countt]['commentsList']
+
+
              
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat', 'passCont': password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'commentsList': saveCommentsList, 'donatesList': saveDonatesList, 'name':saveName,'type':saveType, 'passCont': password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             raise ValueError('fix cables')
@@ -356,9 +479,32 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
             sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
             sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
                  
+                 
+            URL = "http://restservices496.herokuapp.com/containers"
+            id = 1
+            PARAMS = {'container_id':id}
+            r = requests.get(url = URL, params = PARAMS)
+            data = r.json()
+
+
+            countt = 0
+
+            while countt < len(data):
+                if data[countt]['containerID'] == 761:
+                    password = data[countt]['passCont']
+                    break
+                countt = countt + 1
+
+
+            saveName = data[countt]['name']
+            saveType = data[countt]['type']
+            saveDonatesList = data[countt]['donatesList']
+            saveCommentsList = data[countt]['commentsList']
+
+
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat', 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'donatesList': saveDonatesList, 'commentsList': saveCommentsList, 'name':saveName,'type':saveType, 'passCont': password, 'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
             
             raise ValueError('fix cables')
@@ -377,9 +523,33 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
             sendStatusLong = sendStatusLoc[:sendStatusLoc.index(',')]
             sendStatusLat = sendStatusLoc[sendStatusLoc.index(',')+1:]
             
+            
+            URL = "http://restservices496.herokuapp.com/containers"
+            id = 1
+            PARAMS = {'container_id':id}
+            r = requests.get(url = URL, params = PARAMS)
+            data = r.json()
+
+         
+
+            countt = 0
+
+            while countt < len(data):
+                if data[countt]['containerID'] == 761:
+                    password = data[countt]['passCont']
+                    break
+                countt = countt + 1
+
+
+            saveName = data[countt]['name']
+            saveType = data[countt]['type']
+            saveDonatesList = data[countt]['donatesList']
+            saveCommentsList = data[countt]['commentsList']
+
+
             sendStatusHeaders={'Content-type':'application/json', 'Accept':'application/json'}
             sendStatusURL = "https://restservices496.herokuapp.com/editContainer/761"
-            sendStatus = {'name':'real container','type':'cat','passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
+            sendStatus = {'donatesList': saveDonatesList, 'commentsList':saveCommentsList, 'name':saveName,'type':saveType,'passCont':password,'longitude':sendStatusLat,'latitude':sendStatusLong,'address':'406.Sok Birlik Mah.','weight':0, 'status':'2', 'ip':sendStatusIP,'city':sendStatusCity,'region':sendStatusRegion,'country':sendStatusCountry}
             requests.put(url = sendStatusURL, data=json.dumps(sendStatus),headers=sendStatusHeaders)
 
             input('hardware problem')
@@ -589,9 +759,33 @@ def aboutTheDestroy(wind, txt, which):
             
             headers={'Content-type':'application/json', 'Accept':'application/json'}
             mainWindow.update()
+            
+            URL = "http://restservices496.herokuapp.com/containers"
+            id = 1
+            PARAMS = {'container_id':id}
+            r = requests.get(url = URL, params = PARAMS)
+            data = r.json()
+
+            
+
+            countt = 0
+
+            while countt < len(data):
+                if data[countt]['containerID'] == 761:
+                    password = data[countt]['passCont']
+                    break
+                countt = countt + 1
+
+
+            saveName = data[countt]['name']
+            saveType = data[countt]['type']
+            saveDonatesList = data[countt]['donatesList']
+            saveCommentsList = data[countt]['commentsList']
+
+
             URL3 = "https://restservices496.herokuapp.com/editContainer/761"
             #data = {'name':'real container','type':'dosdsdsg','longitude':1,'latitude':1,'address':'a','weight':0, 'ip':'a','city':'a','region':'a','country':'a'}
-            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020', 'estimation':estimationLast}
+            data = {'donatesList' : saveDonatesList, 'commentsList':saveCommentsList, 'name':saveName,'type':saveType,'passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020', 'estimation':estimationLast}
             r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
             
             
@@ -630,12 +824,34 @@ def aboutTheDestroy(wind, txt, which):
             long = loc[:loc.index(',')]
             lat = loc[loc.index(',')+1:]
             
-            
+            URL = "http://restservices496.herokuapp.com/containers"
+            id = 1
+            PARAMS = {'container_id':id}
+            r = requests.get(url = URL, params = PARAMS)
+            data = r.json()
+
+         
+
+            countt = 0
+
+            while countt < len(data):
+                if data[countt]['containerID'] == 761:
+                    password = data[countt]['passCont']
+                    break
+                countt = countt + 1
+
+
+            saveName = data[countt]['name']
+            saveType = data[countt]['type']
+            saveDonatesList = data[countt]['donatesList']
+            saveCommentsList = data[countt]['commentsList']
+
+
             headers={'Content-type':'application/json', 'Accept':'application/json'}
             mainWindow.update()
             URL3 = "https://restservices496.herokuapp.com/editContainer/761"
             #data = {'name':'real container','type':'dosdsdsg','longitude':1,'latitude':1,'address':'a','weight':0, 'ip':'a','city':'a','region':'a','country':'a'}
-            data = {'name':'real container','type':'cat','passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020', 'estimation':estimationLast}
+            data = {'donatesList': saveDonatesList, 'commentsList': saveCommentsList, 'name':saveName,'type':saveType,'passCont':password,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':weight, 'status':'0', 'ip':IP,'city':city,'region':region,'country':country, 'passCont':'Zoologicalfooding2020', 'estimation':estimationLast}
             r3 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
             
                         
