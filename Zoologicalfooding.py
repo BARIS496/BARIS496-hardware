@@ -11,6 +11,7 @@ from hx711 import HX711
 from urllib.request import urlopen
 import threading
 import sys
+import os
 
 import numpy as np
 from sklearn import preprocessing
@@ -151,6 +152,8 @@ def complete(adminWindow, hx, T1, mainWindow, B0, B1, B2):
         
         try:
             wght = hx.get_weight_mean(20)
+        except SystemExit:
+            os._exit(0)
         except:
             T1.config(text = "Status: Hardware Problem", bg = "red")
             sendStatusHTML = urlopen("http://ipinfo.io/json").read()
@@ -310,6 +313,8 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
         error=None
         try:
             error = hx.zero()
+        except SystemExit:
+            os._exit(0)
         except:
             T1.config(text = "Status: Hardware Problem", bg = "red")
             sendStatusHTML = urlopen("http://ipinfo.io/json").read()
@@ -334,6 +339,9 @@ def startHardware(adminWindow, T1, mainWindow, B0, B1, B2):
         reading=None
         try:
             reading = hx.get_raw_data_mean()
+        except SystemExit:
+            os._exit(0)
+            
         except:
             T1.config(text = "Status: Hardware Problem", bg = "red")
             sendStatusHTML = urlopen("http://ipinfo.io/json").read()
@@ -714,7 +722,7 @@ def exitProgram():
             tkinter.messagebox.showinfo("Error", "Wrong Password!")    
             count = count + 1
         else:
-            sys.exit()
+            os._exit(0)
     
     
 
