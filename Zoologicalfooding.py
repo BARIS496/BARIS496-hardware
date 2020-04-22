@@ -921,6 +921,7 @@ def afterFilling():
     x.configure(bg = "lemon chiffon")
     
 def exitProgram():
+    global password
     count = 0
     global windowChecker
     while True:
@@ -938,6 +939,43 @@ def exitProgram():
             tkinter.messagebox.showinfo("Error", "Wrong Password!")    
             count = count + 1
         else:
+            URL = "http://restservices496.herokuapp.com/containers"
+            id = 1
+            PARAMS = {'container_id':id}
+            r = requests.get(url = URL, params = PARAMS)
+            data = r.json()
+
+     
+            countt = 0
+
+            while countt < len(data):
+                if data[countt]['containerID'] == 761:
+                    password = data[countt]['passCont']
+                    break
+                countt = countt + 1
+
+
+            saveName = data[countt]['name']
+            saveType = data[countt]['type']
+            saveDonatesList = data[countt]['donatesList']
+            saveCommentsList = data[countt]['commentsList']
+
+
+
+            html = urlopen("http://ipinfo.io/json").read()
+            data = json.loads(html.decode('utf-8'))
+            IP=data['ip']
+            org=data['org']
+            city = data['city']
+            country=data['country']
+            region=data['region']
+            loc=data['loc']
+            long = loc[:loc.index(',')]
+            lat = loc[loc.index(',')+1:]
+            headers={'Content-type':'application/json', 'Accept':'application/json'}
+            URL3 = "https://restservices496.herokuapp.com/editContainer/761"
+            data = {'donatesList': saveDonatesList,'commentsList':saveCommentsList, 'name':saveName,'type':saveType,'longitude':lat,'latitude':long,'address':'406.Sok Birlik Mah.','weight':0, 'passCont': password,'status': '3', 'ip':IP,'city':city,'region':region,'country':country}
+            r33 = requests.put(url = URL3, data=json.dumps(data),headers=headers)
             os._exit(0)
     
     
